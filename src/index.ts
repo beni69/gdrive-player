@@ -1,7 +1,7 @@
 import { playAudioFile } from "audic";
 import { createWriteStream, mkdirSync, statSync } from "node:fs";
+import { stat } from "node:fs/promises";
 import { extname, join } from "node:path";
-import { stringify } from "node:querystring";
 import { downloadFile, getSvcAccClient, listAudio } from "./gdrive.js";
 
 const DATA_DIR = "data",
@@ -10,7 +10,7 @@ const DATA_DIR = "data",
 interface Item {
     id: string;
     timestamp: Date;
-    path?: string;
+    path: string;
 }
 
 const auth = await getSvcAccClient();
@@ -27,6 +27,15 @@ main();
 
 // run once every hour
 setInterval(main, 1000 * 60 * 60);
+
+const exists = async (p: string) => {
+    try {
+        await stat(p);
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
 
 const validTimestamp = (ts: string | null | undefined): ts is string =>
     new Date(ts || "").getTime() > new Date().getTime();
@@ -48,14 +57,15 @@ async function main() {
         };
         DATA.set(item.id!, item);
 
-        (await downloadFile(auth, { fileId: f.id! })).pipe(
-            createWriteStream(item.path!)
-        );
+        (await exists(item.path)) ||
+            (await downloadFile(auth, { fileId: item.id })).pipe(
+                createWriteStream(item.path)
+            );
 
         const remaining = item.timestamp.getTime() - new Date().getTime();
         setTimeout(async () => {
             console.info(`Playing ${item.path}`);
-            await playAudioFile(item.path!);
+            await playAudioFile(item.path);
             console.info(`Finished ${item.path}`);
         }, remaining);
         console.log(`${f.name} - ${remaining}ms`);
