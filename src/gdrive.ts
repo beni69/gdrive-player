@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "fs/promises";
-import { OAuth2Client, GoogleAuth } from "google-auth-library";
+import { GoogleAuth, OAuth2Client } from "google-auth-library";
 import { drive_v3, google } from "googleapis";
 import readline from "readline";
 
@@ -14,7 +14,7 @@ const TOKEN_PATH = "token.json",
     OAUTH_CREDENTIALS_PATH = "oauth.json",
     SERVICE_ACC_PATH = "svcacc.json";
 
-export const getSvcAccClient = async (): Promise<Client> => {
+export const getSvcAccClient = (): Client => {
     const auth = new GoogleAuth({ keyFile: SERVICE_ACC_PATH, scopes: SCOPES });
     return auth;
 };

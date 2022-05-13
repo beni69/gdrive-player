@@ -1,4 +1,4 @@
-import { playAudioFile } from "audic";
+import Audic from "audic";
 import { createWriteStream, mkdirSync, statSync } from "node:fs";
 import { stat } from "node:fs/promises";
 import { extname, join } from "node:path";
@@ -13,7 +13,7 @@ interface Item {
     path: string;
 }
 
-const auth = await getSvcAccClient();
+const auth = getSvcAccClient();
 
 // create data directory if it doesn't exist
 try {
@@ -65,8 +65,15 @@ async function main() {
         const remaining = item.timestamp.getTime() - new Date().getTime();
         setTimeout(async () => {
             console.info(`Playing ${item.path}`);
-            await playAudioFile(item.path);
-            console.info(`Finished ${item.path}`);
+
+            const a = new Audic(item.path);
+            a.loop = false;
+            a.play();
+
+            a.addEventListener("ended", () => {
+                a.destroy();
+                console.info(`Finished ${item.path}`);
+            });
         }, remaining);
         console.log(`${f.name} - ${remaining}ms`);
     }
