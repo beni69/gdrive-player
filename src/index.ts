@@ -1,42 +1,25 @@
-import Audic from "audic";
-import { createWriteStream, mkdirSync, statSync } from "node:fs";
-import { stat } from "node:fs/promises";
-import { extname, join, resolve } from "node:path";
+// @ts-expect-error fork, incorrect type-defs
+// https://github.com/TooTallNate/node-lame/issues/92
+import { Decoder } from "@suldashi/lame";
+import { extname } from "node:path";
+import Speaker from "speaker";
 import { downloadFile, getSvcAccClient, listAudio } from "./gdrive";
-import "./playtest";
+// import "./playtest"; // for debugging purposes
 
-const DATA_DIR = "data",
-    DATA: Map<string, Item> = new Map();
+const DATA: Map<string, Date> = new Map();
 
 interface Item {
     id: string;
     timestamp: Date;
-    path: string;
 }
 
 const auth = getSvcAccClient();
-
-// create data directory if it doesn't exist
-try {
-    statSync(DATA_DIR);
-} catch (e) {
-    mkdirSync(DATA_DIR);
-}
 
 // run now
 main();
 
 // run once every hour
 setInterval(main, 1000 * 60 * 60);
-
-const exists = async (p: string) => {
-    try {
-        await stat(p);
-        return true;
-    } catch (e) {
-        return false;
-    }
-};
 
 const validTimestamp = (ts: string | null | undefined): ts is string =>
     new Date(ts || "").getTime() > new Date().getTime();
@@ -54,27 +37,21 @@ async function main() {
         const item: Item = {
             id: f.id!,
             timestamp: new Date(name),
-            path: join(DATA_DIR, f.id! + ".mp3"),
         };
-        DATA.set(item.id!, item);
-
-        (await exists(item.path)) ||
-            (await downloadFile(auth, { fileId: item.id })).pipe(
-                createWriteStream(item.path)
-            );
+        DATA.set(item.id!, item.timestamp);
 
         const remaining = item.timestamp.getTime() - new Date().getTime();
         setTimeout(async () => {
-            console.info(`Playing ${item.path}`);
+            console.info(`Playing ${item.id}`);
 
-            const a = new Audic(item.path);
-            a.loop = false;
-            a.play();
-
-            a.addEventListener("ended", () => {
-                a.destroy();
-                console.info(`Finished ${item.path}`);
-            });
+            (await downloadFile(auth, { fileId: item.id }))
+                .pipe(new Decoder())
+                .on("format", () => console.log)
+                .pipe(
+                    new Speaker().on("finish", () =>
+                        console.info(`Finished ${item.id}`)
+                    )
+                );
         }, remaining);
         console.log(`${f.name} - ${remaining}ms`);
     }

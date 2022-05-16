@@ -2,8 +2,8 @@
     "bin": "dist/bundle.cjs",
     "pkg": {
         "assets": [
-            "node_modules/.pnpm/vlc-static@*/node_modules/vlc-static/bin/**/*",
-            "data/test.mp3"
+            "node_modules/@suldashi/lame/build/Release/bindings.node",
+            "node_modules/speaker/build/Release/binding.node"
         ]
     }
 }
