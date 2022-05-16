@@ -1,0 +1,9 @@
+{
+    "bin": "dist/bundle.cjs",
+    "pkg": {
+        "assets": [
+            "node_modules/.pnpm/vlc-static@*/node_modules/vlc-static/bin/**/*",
+            "data/test.mp3"
+        ]
+    }
+}

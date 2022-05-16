@@ -7,15 +7,15 @@
     "scripts": {
         "check": "tsc --noemit",
         "build": "node build.js",
-        "export": "npm run build && pkg -t node16 .",
+        "export": "npm run build && pkg -t node16 dist/bundle.cjs -o player -c pkg.json",
         "start": "tsm ."
     },
+    "pkg": {},
     "keywords": [],
     "author": "",
     "license": "GPL-3.0",
     "dependencies": {
         "audic": "^3.0.0",
-        "google-auth-library": "^7.14.1",
         "googleapis": "^100.0.0"
     },
     "devDependencies": {

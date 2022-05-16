@@ -1,6 +1,7 @@
-async function main() {
-    const { playAudioFile } = await import("audic");
+import { resolve } from "node:path";
 
-    playAudioFile("data/test.mp3");
-}
-main();
+import("audic").then(audic => {
+    const audio = process.env.TEST_AUDIO ?? "data/test.mp3";
+    console.log(`playing: ${resolve(audio)}`);
+    audic.playAudioFile(audio);
+});

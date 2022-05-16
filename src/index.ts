@@ -1,8 +1,9 @@
 import Audic from "audic";
 import { createWriteStream, mkdirSync, statSync } from "node:fs";
 import { stat } from "node:fs/promises";
-import { extname, join } from "node:path";
-import { downloadFile, getSvcAccClient, listAudio } from "./gdrive.js";
+import { extname, join, resolve } from "node:path";
+import { downloadFile, getSvcAccClient, listAudio } from "./gdrive";
+import "./playtest";
 
 const DATA_DIR = "data",
     DATA: Map<string, Item> = new Map();
