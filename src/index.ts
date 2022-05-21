@@ -3,7 +3,7 @@
 import { Decoder } from "@suldashi/lame";
 import { extname } from "node:path";
 import Speaker from "speaker";
-import { downloadFile, getSvcAccClient, listAudio } from "./gdrive";
+import { downloadFile, listAudio } from "./gdrive";
 // import "./playtest"; // for debugging purposes
 
 const DATA: Map<string, Date> = new Map();
@@ -12,8 +12,6 @@ interface Item {
     id: string;
     timestamp: Date;
 }
-
-const auth = getSvcAccClient();
 
 // run now
 main();
@@ -25,7 +23,7 @@ const validTimestamp = (ts: string | null | undefined): ts is string =>
     new Date(ts || "").getTime() > new Date().getTime();
 
 async function main() {
-    let files = await listAudio(auth);
+    let files = await listAudio();
     console.debug(files);
 
     for (const f of files) {
@@ -44,7 +42,7 @@ async function main() {
         setTimeout(async () => {
             console.info(`Playing ${item.id}`);
 
-            (await downloadFile(auth, { fileId: item.id }))
+            (await downloadFile({ fileId: item.id }))
                 .pipe(new Decoder())
                 .on("format", () => console.log)
                 .pipe(

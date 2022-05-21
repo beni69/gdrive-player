@@ -1,18 +1,18 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@googleapis/drive': ^2.3.0
   '@suldashi/lame': ^1.2.5
   '@types/node': ^17.0.31
   esbuild: ^0.14.38
-  googleapis: ^100.0.0
   pkg: ^5.6.0
   speaker: ^0.5.4
   tsm: ^2.2.1
   typescript: ^4.6.4
 
 dependencies:
+  '@googleapis/drive': 2.3.0
   '@suldashi/lame': 1.2.5
-  googleapis: 100.0.0
   speaker: 0.5.4
 
 devDependencies:
@@ -44,6 +44,16 @@ packages:
       '@babel/helper-validator-identifier': 7.16.7
       to-fast-properties: 2.0.0
     dev: true
+
+  /@googleapis/drive/2.3.0:
+    resolution: {integrity: sha512-uXLF2qc1Hzee25acyEEmyfwbyw1nI2hjUde7pTNOc3K4OkVlPdq08+e7x+hdlUkQPazmqhtbPmWWm2HNAek9+A==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      googleapis-common: 5.1.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -180,7 +190,7 @@ packages:
     dev: false
 
   /buffer-equal-constant-time/1.0.1:
-    resolution: {integrity: sha1-+OcRMvf/5uAaXJaXpMbz5I1cyBk=}
+    resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
     dev: false
 
   /buffer-fill/1.0.0:
@@ -741,17 +751,6 @@ packages:
       qs: 6.10.3
       url-template: 2.0.8
       uuid: 8.3.2
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
-
-  /googleapis/100.0.0:
-    resolution: {integrity: sha512-RToFQGY54B756IDbjdyjb1vWFmn03bYpXHB2lIf0eq2UBYsIbYOLZ0kqSomfJnpclEukwEmMF7Jn6Wsev871ew==}
-    engines: {node: '>=10'}
-    dependencies:
-      google-auth-library: 7.14.1
-      googleapis-common: 5.1.0
     transitivePeerDependencies:
       - encoding
       - supports-color

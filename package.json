@@ -16,8 +16,8 @@
     "author": "",
     "license": "GPL-3.0",
     "dependencies": {
+        "@googleapis/drive": "^2.3.0",
         "@suldashi/lame": "^1.2.5",
-        "googleapis": "^100.0.0",
         "speaker": "^0.5.4"
     },
     "devDependencies": {
