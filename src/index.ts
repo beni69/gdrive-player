@@ -36,7 +36,18 @@ async function main() {
             id: f.id!,
             timestamp: new Date(name),
         };
-        DATA.set(item.id!, item.timestamp);
+        if (DATA.has(item.id)) {
+            const old = DATA.get(item.id);
+            if (old && old.getTime() === item.timestamp.getTime()) {
+                console.debug(`${item.id} is up to date`);
+                continue;
+            }
+            console.debug(
+                `${item.id} is outdated: ${old} -> ${item.timestamp}`
+            );
+        }
+
+        DATA.set(item.id, item.timestamp);
 
         const remaining = item.timestamp.getTime() - new Date().getTime();
         setTimeout(async () => {
