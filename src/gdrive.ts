@@ -1,5 +1,4 @@
-// import { drive_v3, google } from "googleapis";
-import { drive_v3, auth, drive as _drive } from "@googleapis/drive";
+import { auth, drive as _drive, drive_v3 } from "@googleapis/drive";
 
 const SERVICE_ACC_PATH = "svcacc.json",
     SCOPES = ["https://www.googleapis.com/auth/drive.readonly"],
@@ -34,13 +33,23 @@ export const listFiles = () => {
     );
 };
 
+export const getSharedFolder = () =>
+    drive.files
+        .list({
+            q: "sharedWithMe=true and mimeType='application/vnd.google-apps.folder'",
+        })
+        .then(x => x.data.files?.[0]);
+
+const FOLDER: Promise<string> = process.env["GDRIVE_FOLDER"]
+    ? Promise.resolve(process.env["GDRIVE_FOLDER"])
+    : getSharedFolder().then(f => f?.id ?? "");
+
 export const listAudio = () =>
-    new Promise<drive_v3.Schema$File[]>((res, rej) => {
-        drive.files.list({ q: "mimeType='audio/mpeg'" }, (err, data) => {
-            if (err || !data) rej(err);
-            else res(data.data.files || []);
-        });
-    });
+    FOLDER.then(f =>
+        drive.files.list({
+            q: `mimeType='audio/mpeg' and '${f}' in parents`,
+        })
+    ).then(x => x.data.files || Promise.reject());
 
 export const getFile = (p: drive_v3.Params$Resource$Files$Get) =>
     drive.files.get(p);
