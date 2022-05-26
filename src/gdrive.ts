@@ -1,7 +1,7 @@
 import { auth, drive as _drive, drive_v3 } from "@googleapis/drive";
 
 const SERVICE_ACC_PATH = "svcacc.json",
-    SCOPES = ["https://www.googleapis.com/auth/drive.readonly"],
+    SCOPES = ["https://www.googleapis.com/auth/drive"], // PRIVILEGED SCOPE: this would be bad with oAuth but with a service account it's fine
     login = () =>
         new auth.GoogleAuth({
             keyFile: SERVICE_ACC_PATH,
@@ -48,6 +48,7 @@ export const listAudio = () =>
     FOLDER.then(f =>
         drive.files.list({
             q: `mimeType='audio/mpeg' and '${f}' in parents`,
+            fields: "files(id, name, mimeType)",
         })
     ).then(x => x.data.files || Promise.reject());
 
@@ -64,3 +65,6 @@ export const downloadFile = async (p: drive_v3.Params$Resource$Files$Get) => {
     );
     return f.data;
 };
+
+export const renameFile = (id: string, name: string) =>
+    drive.files.update({ fileId: id, requestBody: { name } });
