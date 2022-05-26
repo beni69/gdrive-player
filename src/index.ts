@@ -5,6 +5,7 @@ import { extname } from "node:path";
 import Speaker from "speaker";
 import { downloadFile, listAudio, renameFile } from "./gdrive";
 import log from "./log";
+import ms from "ms";
 // import "./playtest"; // for debugging purposes
 
 log("starting");
@@ -87,7 +88,7 @@ async function main() {
                     })
                 );
         }, remaining);
-        log(`${f.name} - ${remaining}ms`);
+        log(`Playing in ${ms(remaining, { long: true })}`);
     }
 
     log(DATA);
