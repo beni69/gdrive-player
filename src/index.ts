@@ -43,7 +43,10 @@ async function main() {
     let files = await listAudio();
 
     for (const f of files) {
-        let name = f.name?.replace(/\[.*\]/, "").replace(extname(f.name), "");
+        let name = f.name
+            ?.replace(/\[.*\]/, "")
+            .replace(extname(f.name), "")
+            .trim();
 
         if (!validTimestamp(name)) {
             updateState(
