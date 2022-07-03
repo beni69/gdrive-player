@@ -9,7 +9,7 @@
     "scripts": {
         "check": "tsc --noemit",
         "build": "node build.js",
-        "export": "npm run build && pkg -t node16 -c pkg.json --compress brotli -o dist/player dist/bundle.cjs",
+        "export": "pkg -t node16 -c pkg.json --compress brotli -o dist/player dist/bundle.cjs",
         "start": "tsm ."
     },
     "keywords": [],
